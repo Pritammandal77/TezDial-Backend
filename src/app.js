@@ -22,6 +22,9 @@ app.use(express.static("public"))
 
 app.use(cookieParser())
 
+import businessRouter from "./routes/business.routes";
+
+app.use("/api/business", businessRouter)
 
 
 export { app }
