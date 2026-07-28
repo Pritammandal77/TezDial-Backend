@@ -1,9 +1,11 @@
-import { uploadOnCloudinary } from "../../utils/cloudinary";
-import { Business } from "../models/business.model";
+import { uploadOnCloudinary } from "../../utils/cloudinary.js";
+import { Business } from "../models/business.model.js";
 
 
 export const createNewBusiness = async (req, res) => {
-    const { title, category, city, phone, description, address, pin, rating } = req.body
+    const { title, category, city, phone, whatsapp, description, address, pin, rating } = req.body
+
+    console.log("calling APi")
 
     if (!title || !category || !city || !phone || !description || !address || !pin || !rating) {
         return res.json({
@@ -18,9 +20,10 @@ export const createNewBusiness = async (req, res) => {
 
     for (const file of ImagesLocalPaths) {
         const uploaded = await uploadOnCloudinary(file.path);
-
+        console.log("uploading file")
         if (uploaded?.url) {
             imageUrls.push(uploaded.url);
+            console.log(uploaded.url);
         }
     }
 
@@ -30,7 +33,7 @@ export const createNewBusiness = async (req, res) => {
             category,
             city,
             phone,
-            whatsapp : whatsapp || "",
+            whatsapp: whatsapp || "",
             description,
             address,
             pin,
