@@ -50,3 +50,43 @@ export const createNewBusiness = async (req, res) => {
         }
     )
 }
+
+
+export const fetchAllBusinesses = async (req, res) => {
+    try {
+        const { category, city, search } = req.query;
+
+        const query = {};
+
+        if (category?.trim()) {
+            query.category = category.trim();
+        }
+
+        if (city?.trim()) {
+            query.city = { $regex: city.trim(), $options: "i" };
+        }
+
+        if (search?.trim()) {
+            const searchRegex = { $regex: search.trim(), $options: "i" };
+            query.$or = [
+                { title: searchRegex },
+                { description: searchRegex },
+                { category: searchRegex }
+            ];
+        }
+
+        const businesses = await Business.find(query).sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            statusCode: 200,
+            count: businesses.length,
+            businesses
+        });
+    } catch (error) {
+        return res.status(500).json({
+            statusCode: 500,
+            message: "Failed to fetch businesses",
+            error: error.message
+        });
+    }
+};
