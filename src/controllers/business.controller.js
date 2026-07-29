@@ -3,11 +3,11 @@ import { Business } from "../models/business.model.js";
 
 
 export const createNewBusiness = async (req, res) => {
-    const { title, category, city, phone, whatsapp, description, address, pin, rating } = req.body
+    const { ownerName, title, category, city, phone, whatsapp, description, address, pin, rating } = req.body
 
     console.log("calling APi")
 
-    if (!title || !category || !city || !phone || !description || !address || !pin || !rating) {
+    if (!ownerName || !title || !category || !city || !phone || !description || !address || !pin || !rating) {
         return res.json({
             statusCode: 400,
             message: "all fields are required"
@@ -29,6 +29,7 @@ export const createNewBusiness = async (req, res) => {
 
     const newBusiness = await Business.create(
         {
+            ownerName,
             title,
             category,
             city,

@@ -3,6 +3,10 @@ import bcrypt from "bcryptjs";
 
 const businessSchema = new Schema(
     {
+        ownerName: {
+            type: String,
+            required: true
+        },
         title: {
             type: String,
             required: true
