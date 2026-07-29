@@ -90,3 +90,40 @@ export const fetchAllBusinesses = async (req, res) => {
         });
     }
 };
+
+export const fetchBusinessById = async (req, res) => {
+    try {
+        // 1. Destructure the ID from params
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({
+                statusCode: 400,
+                message: "Business ID is required in URL parameters"
+            });
+        }
+
+        // 2. Pass ID directly to findById
+        const business = await Business.findById(id);
+
+        if (!business) {
+            return res.status(404).json({
+                statusCode: 404,
+                message: "Business not found"
+            });
+        }
+
+        return res.status(200).json({
+            statusCode: 200,
+            business,
+            message: "Business data fetched successfully"
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            statusCode: 500,
+            message: "Failed to fetch business details",
+            error: error.message
+        });
+    }
+};
