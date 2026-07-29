@@ -128,3 +128,49 @@ export const fetchBusinessById = async (req, res) => {
         });
     }
 };
+
+
+export const deleteBusinessListing = async (req, res) => {
+    try {
+        const { id, pin } = req.body;
+
+        if (!id || !pin) {
+            return res.json({
+                statusCode: 400,
+                message: "Business id and pin are required"
+            });
+        }
+
+        const business = await Business.findById(id);
+
+        if (!business) {
+            return res.json({
+                statusCode: 404,
+                message: "Business listing not found"
+            });
+        }
+
+        const isPinCorrect = await business.ispinCorrect(pin);
+
+        if (!isPinCorrect) {
+            return res.json({
+                statusCode: 401,
+                message: "Incorrect pin"
+            });
+        }
+
+        await Business.findByIdAndDelete(id);
+
+        return res.json({
+            statusCode: 200,
+            message: "Business listing deleted successfully"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            statusCode: 500,
+            message: "Failed to delete business listing",
+            error: error.message
+        });
+    }
+};
+
